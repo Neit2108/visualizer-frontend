@@ -13,6 +13,9 @@ import type {
   GetTablesResponse,
   TableData,
   VisualizeQueryResponse,
+  DatabaseMonitoringData,
+  FeedbackMonitoringData,
+  SystemStatusData,
 } from './types';
 
 // ============================================
@@ -178,6 +181,16 @@ export const api = {
   // Health
   healthCheck: (): Promise<{ status: string; timestamp: string }> =>
     request<{ status: string; timestamp: string }>('/api/health'),
+
+  // Monitoring
+  getDatabaseStatus: (): Promise<DatabaseMonitoringData> =>
+    request<DatabaseMonitoringData>('/api/monitoring/database'),
+
+  getFeedbackStatus: (): Promise<FeedbackMonitoringData> =>
+    request<FeedbackMonitoringData>('/api/monitoring/feedback'),
+
+  getSystemStatus: (): Promise<SystemStatusData> =>
+    request<SystemStatusData>('/api/monitoring/status'),
 };
 
 // ============================================
@@ -230,4 +243,11 @@ export type {
   ExecutionStepType,
   DataFlowStep,
   RowState,
+  DatabaseMonitoringData,
+  FeedbackMonitoringData,
+  SystemStatusData,
+  DatabasePoolStats,
+  FeedbackCategoryBreakdown,
+  RecentFeedbackActivity,
+  DatabaseStatus,
 } from './types';

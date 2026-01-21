@@ -5,7 +5,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api, initSession } from '@/api/client';
 import { useAppStore } from '@/store';
-import type { GetTablesResponse, VisualizeQueryResponse } from '@/api/types';
+import type { 
+  GetTablesResponse, 
+  VisualizeQueryResponse,
+  DatabaseMonitoringData,
+  FeedbackMonitoringData,
+  SystemStatusData,
+} from '@/api/types';
 
 // ============================================
 // Query Keys
@@ -17,6 +23,11 @@ export const queryKeys = {
   session: (id: string | null) => ['session', id] as const,
   tables: (sessionId: string | null) => ['tables', sessionId] as const,
   health: ['health'] as const,
+  monitoring: {
+    database: ['monitoring', 'database'] as const,
+    feedback: ['monitoring', 'feedback'] as const,
+    status: ['monitoring', 'status'] as const,
+  },
 };
 
 // ============================================
@@ -183,4 +194,35 @@ export function useCleanupSession() {
       }
     }
   };
+}
+
+// ============================================
+// Monitoring Hooks
+// ============================================
+
+export function useDatabaseMonitoring(refetchInterval = 5000) {
+  return useQuery<DatabaseMonitoringData>({
+    queryKey: queryKeys.monitoring.database,
+    queryFn: () => api.getDatabaseStatus(),
+    refetchInterval,
+    staleTime: 2000,
+  });
+}
+
+export function useFeedbackMonitoring(refetchInterval = 30000) {
+  return useQuery<FeedbackMonitoringData>({
+    queryKey: queryKeys.monitoring.feedback,
+    queryFn: () => api.getFeedbackStatus(),
+    refetchInterval,
+    staleTime: 10000,
+  });
+}
+
+export function useSystemStatus(refetchInterval = 10000) {
+  return useQuery<SystemStatusData>({
+    queryKey: queryKeys.monitoring.status,
+    queryFn: () => api.getSystemStatus(),
+    refetchInterval,
+    staleTime: 5000,
+  });
 }

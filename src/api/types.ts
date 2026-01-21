@@ -224,3 +224,65 @@ export const STEP_COLORS: Record<ExecutionStepType, string> = {
   LIMIT: '#EC4899',
   OFFSET: '#84CC16',
 };
+
+// ============================================
+// Monitoring Types
+// ============================================
+
+export interface DatabasePoolStats {
+  active: number;
+  idle: number;
+  waiting: number;
+  total: number;
+  limit: number;
+  utilization: number;
+}
+
+export interface DatabaseMonitoringData {
+  connected: boolean;
+  pool: DatabasePoolStats;
+  responseTime: number;
+  lastChecked: string;
+  error?: string;
+}
+
+export interface FeedbackCategoryBreakdown {
+  bug: number;
+  feature: number;
+  improvement: number;
+  other: number;
+}
+
+export interface RecentFeedbackActivity {
+  last24h: number;
+  last7d: number;
+  last30d: number;
+}
+
+export interface FeedbackMonitoringData {
+  total: number;
+  recent: RecentFeedbackActivity;
+  byCategory: FeedbackCategoryBreakdown;
+  averageRating: number;
+  uniqueContacts: number;
+  lastSubmission: string | null;
+}
+
+export type DatabaseStatus = 'healthy' | 'degraded' | 'unhealthy';
+
+export interface SystemStatusData {
+  database: {
+    status: DatabaseStatus;
+    connected: boolean;
+    poolUtilization: number;
+  };
+  api: {
+    status: 'available';
+    uptime: number;
+  };
+  feedback: {
+    totalSubmissions: number;
+    recentActivity: boolean;
+  };
+  timestamp: string;
+}
