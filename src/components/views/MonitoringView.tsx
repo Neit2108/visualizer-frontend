@@ -3,23 +3,23 @@
  */
 
 import { motion } from 'motion/react';
-import { 
-  Activity, 
-  Database, 
-  MessageSquare, 
-  Server, 
-  Clock, 
-  Users, 
+import {
+  Activity,
+  Database,
+  MessageSquare,
+  Server,
+  Clock,
+  Users,
   TrendingUp,
   AlertCircle,
   CheckCircle,
   AlertTriangle,
   RefreshCw,
 } from 'lucide-react';
-import { 
-  useDatabaseMonitoring, 
-  useFeedbackMonitoring, 
-  useSystemStatus 
+import {
+  useDatabaseMonitoring,
+  useFeedbackMonitoring,
+  useSystemStatus
 } from '@/hooks/useApi';
 import { cn } from '@/lib/utils';
 import type { DatabaseStatus } from '@/api/types';
@@ -32,7 +32,7 @@ function formatUptime(seconds: number): string {
   const days = Math.floor(seconds / 86400);
   const hours = Math.floor((seconds % 86400) / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
-  
+
   if (days > 0) return `${days}d ${hours}h ${minutes}m`;
   if (hours > 0) return `${hours}h ${minutes}m`;
   return `${minutes}m`;
@@ -54,9 +54,9 @@ function StatusBadge({ status }: { status: DatabaseStatus | 'available' }) {
     unhealthy: { bg: 'bg-red-500/20', text: 'text-red-400', label: 'Unhealthy' },
     available: { bg: 'bg-emerald-500/20', text: 'text-emerald-400', label: 'Available' },
   };
-  
+
   const { bg, text, label } = config[status] || config.healthy;
-  
+
   return (
     <span className={cn('px-2.5 py-1 rounded-full text-xs font-semibold', bg, text)}>
       {label.toUpperCase()}
@@ -68,37 +68,37 @@ function StatusBadge({ status }: { status: DatabaseStatus | 'available' }) {
 // Metric Card Component
 // ============================================
 
-interface MetricCardProps {
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  value: string | number;
-  subtext?: string;
-  trend?: 'up' | 'down' | 'neutral';
-  color?: 'violet' | 'emerald' | 'amber' | 'red' | 'blue';
-}
+// interface MetricCardProps {
+//   icon: React.ComponentType<{ className?: string }>;
+//   label: string;
+//   value: string | number;
+//   subtext?: string;
+//   trend?: 'up' | 'down' | 'neutral';
+//   color?: 'violet' | 'emerald' | 'amber' | 'red' | 'blue';
+// }
 
-function MetricCard({ icon: Icon, label, value, subtext, color = 'violet' }: MetricCardProps) {
-  const colorClasses = {
-    violet: 'from-violet-500 to-fuchsia-500',
-    emerald: 'from-emerald-500 to-teal-500',
-    amber: 'from-amber-500 to-orange-500',
-    red: 'from-red-500 to-rose-500',
-    blue: 'from-blue-500 to-cyan-500',
-  };
-  
-  return (
-    <div className="p-5 bg-zinc-900/50 rounded-2xl border border-white/5 hover:border-white/10 transition-colors">
-      <div className="flex items-center gap-3 mb-3">
-        <div className={cn('w-10 h-10 rounded-xl bg-linear-to-br flex items-center justify-center', colorClasses[color])}>
-          <Icon className="w-5 h-5 text-white" />
-        </div>
-        <span className="text-sm text-zinc-400">{label}</span>
-      </div>
-      <div className="text-2xl font-bold text-zinc-100">{value}</div>
-      {subtext && <div className="text-xs text-zinc-500 mt-1">{subtext}</div>}
-    </div>
-  );
-}
+// function MetricCard({ icon: Icon, label, value, subtext, color = 'violet' }: MetricCardProps) {
+//   const colorClasses = {
+//     violet: 'from-violet-500 to-fuchsia-500',
+//     emerald: 'from-emerald-500 to-teal-500',
+//     amber: 'from-amber-500 to-orange-500',
+//     red: 'from-red-500 to-rose-500',
+//     blue: 'from-blue-500 to-cyan-500',
+//   };
+
+//   return (
+//     <div className="p-5 bg-zinc-900/50 rounded-2xl border border-white/5 hover:border-white/10 transition-colors">
+//       <div className="flex items-center gap-3 mb-3">
+//         <div className={cn('w-10 h-10 rounded-xl bg-linear-to-br flex items-center justify-center', colorClasses[color])}>
+//           <Icon className="w-5 h-5 text-white" />
+//         </div>
+//         <span className="text-sm text-zinc-400">{label}</span>
+//       </div>
+//       <div className="text-2xl font-bold text-zinc-100">{value}</div>
+//       {subtext && <div className="text-xs text-zinc-500 mt-1">{subtext}</div>}
+//     </div>
+//   );
+// }
 
 // ============================================
 // Progress Bar Component
@@ -107,7 +107,8 @@ function MetricCard({ icon: Icon, label, value, subtext, color = 'violet' }: Met
 function ProgressBar({ value, max, color = 'violet' }: { value: number; max: number; color?: string }) {
   const percentage = Math.min((value / max) * 100, 100);
   const colorClass = percentage > 80 ? 'bg-red-500' : percentage > 60 ? 'bg-amber-500' : 'bg-violet-500';
-  
+
+  console.log(color, 'color');
   return (
     <div className="w-full bg-zinc-800 rounded-full h-2.5">
       <div
@@ -124,7 +125,7 @@ function ProgressBar({ value, max, color = 'violet' }: { value: number; max: num
 
 function DatabaseStatusPanel() {
   const { data, isLoading, error, refetch } = useDatabaseMonitoring(5000);
-  
+
   if (isLoading) {
     return (
       <div className="p-6 bg-zinc-900/50 rounded-2xl border border-white/5 animate-pulse">
@@ -136,7 +137,7 @@ function DatabaseStatusPanel() {
       </div>
     );
   }
-  
+
   if (error || !data) {
     return (
       <div className="p-6 bg-red-900/20 rounded-2xl border border-red-500/30">
@@ -147,7 +148,7 @@ function DatabaseStatusPanel() {
       </div>
     );
   }
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -184,7 +185,7 @@ function DatabaseStatusPanel() {
           </button>
         </div>
       </div>
-      
+
       <div className="space-y-4">
         {/* Response Time */}
         <div className="flex justify-between items-center">
@@ -196,7 +197,7 @@ function DatabaseStatusPanel() {
             {data.responseTime}ms
           </span>
         </div>
-        
+
         {/* Pool Utilization */}
         <div>
           <div className="flex justify-between items-center mb-2">
@@ -205,7 +206,7 @@ function DatabaseStatusPanel() {
           </div>
           <ProgressBar value={data.pool.utilization} max={100} />
         </div>
-        
+
         {/* Connection Details */}
         <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/5">
           <div className="text-center">
@@ -225,7 +226,7 @@ function DatabaseStatusPanel() {
             <div className="text-xs text-zinc-500">Total/Limit</div>
           </div>
         </div>
-        
+
         {data.error && (
           <div className="mt-4 p-3 bg-red-900/30 border border-red-500/30 rounded-lg">
             <div className="flex items-center gap-2 text-red-400 text-sm">
@@ -234,7 +235,7 @@ function DatabaseStatusPanel() {
             </div>
           </div>
         )}
-        
+
         <div className="text-xs text-zinc-600 mt-4">
           Last checked: {formatTime(data.lastChecked)}
         </div>
@@ -249,7 +250,7 @@ function DatabaseStatusPanel() {
 
 function FeedbackMetricsPanel() {
   const { data, isLoading, error, refetch } = useFeedbackMonitoring(30000);
-  
+
   if (isLoading) {
     return (
       <div className="p-6 bg-zinc-900/50 rounded-2xl border border-white/5 animate-pulse">
@@ -261,7 +262,7 @@ function FeedbackMetricsPanel() {
       </div>
     );
   }
-  
+
   if (error || !data) {
     return (
       <div className="p-6 bg-red-900/20 rounded-2xl border border-red-500/30">
@@ -272,7 +273,7 @@ function FeedbackMetricsPanel() {
       </div>
     );
   }
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -298,7 +299,7 @@ function FeedbackMetricsPanel() {
           <RefreshCw className="w-4 h-4 text-zinc-400" />
         </button>
       </div>
-      
+
       {/* Main Stats */}
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="p-4 bg-zinc-800/50 rounded-xl">
@@ -312,7 +313,7 @@ function FeedbackMetricsPanel() {
           <div className="text-xs text-zinc-500">Average Rating</div>
         </div>
       </div>
-      
+
       {/* Recent Activity */}
       <div className="mb-6">
         <h4 className="text-sm font-medium text-zinc-300 mb-3">Recent Activity</h4>
@@ -331,7 +332,7 @@ function FeedbackMetricsPanel() {
           </div>
         </div>
       </div>
-      
+
       {/* By Category */}
       <div className="mb-4">
         <h4 className="text-sm font-medium text-zinc-300 mb-3">By Category</h4>
@@ -354,14 +355,14 @@ function FeedbackMetricsPanel() {
           </div>
         </div>
       </div>
-      
+
       <div className="flex justify-between items-center pt-4 border-t border-white/5">
         <div className="flex items-center gap-2">
           <Users className="w-4 h-4 text-zinc-500" />
           <span className="text-sm text-zinc-400">{data.uniqueContacts} unique contacts</span>
         </div>
       </div>
-      
+
       {data.lastSubmission && (
         <div className="text-xs text-zinc-600 mt-3">
           Last submission: {formatTime(data.lastSubmission)}
@@ -377,7 +378,7 @@ function FeedbackMetricsPanel() {
 
 function SystemStatusPanel() {
   const { data, isLoading, error, refetch } = useSystemStatus(10000);
-  
+
   if (isLoading) {
     return (
       <div className="p-6 bg-zinc-900/50 rounded-2xl border border-white/5 animate-pulse col-span-full">
@@ -390,7 +391,7 @@ function SystemStatusPanel() {
       </div>
     );
   }
-  
+
   if (error || !data) {
     return (
       <div className="p-6 bg-red-900/20 rounded-2xl border border-red-500/30 col-span-full">
@@ -401,7 +402,7 @@ function SystemStatusPanel() {
       </div>
     );
   }
-  
+
   const getStatusIcon = (status: DatabaseStatus) => {
     switch (status) {
       case 'healthy':
@@ -412,7 +413,7 @@ function SystemStatusPanel() {
         return <AlertCircle className="w-5 h-5 text-red-400" />;
     }
   };
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -438,7 +439,7 @@ function SystemStatusPanel() {
           <RefreshCw className="w-4 h-4 text-zinc-400" />
         </button>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Database Status */}
         <div className="p-5 bg-zinc-800/30 rounded-xl">
@@ -471,7 +472,7 @@ function SystemStatusPanel() {
             </div>
           </div>
         </div>
-        
+
         {/* API Status */}
         <div className="p-5 bg-zinc-800/30 rounded-xl">
           <div className="flex items-center justify-between mb-4">
@@ -494,7 +495,7 @@ function SystemStatusPanel() {
             </div>
           </div>
         </div>
-        
+
         {/* Feedback Status */}
         <div className="p-5 bg-zinc-800/30 rounded-xl">
           <div className="flex items-center justify-between mb-4">
@@ -527,7 +528,7 @@ function SystemStatusPanel() {
           </div>
         </div>
       </div>
-      
+
       <div className="text-xs text-zinc-600 mt-6 text-right">
         Last updated: {formatTime(data.timestamp)}
       </div>
@@ -562,7 +563,7 @@ export function MonitoringView() {
 
       {/* System Status Overview */}
       <SystemStatusPanel />
-      
+
       {/* Detailed Panels */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <DatabaseStatusPanel />
