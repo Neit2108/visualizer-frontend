@@ -559,7 +559,7 @@ export function FeedbackFAB() {
           onClick={handleFABClick}
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.5, type: 'spring', damping: 15 }}
+          transition={{ type: 'spring', damping: 15 }}
           whileHover={{
             scale: 1.1,
             y: -4,
@@ -572,7 +572,7 @@ export function FeedbackFAB() {
             'flex items-center justify-center',
             'shadow-lg shadow-violet-500/30',
             'focus:outline-none focus:ring-4 focus:ring-violet-500/30',
-            'transition-shadow duration-200'
+            'transition-shadow duration-200 cursor-pointer'
           )}
           aria-label="Gửi phản hồi"
           title="Gửi phản hồi"
